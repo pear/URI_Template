@@ -37,7 +37,7 @@ $p2->setOptions(array(
     "packagedirectory"  => ".",
     "baseinstalldir"    => "URI",
     "simpleoutput" => true,
-    "ignore" => array("package.xml", "makepackage.php", "runtests.sh", "*.svn/", "CVS/", "*.tgz")));
+    "ignore" => array("package.xml", "makepackage.php", "runtests.sh", "URI_Template/CVS/", "URI_Template/*/CVS/", "*.svn/", "*.tgz")));
 
 $p2->setPackageType("php");
 $p2->generateContents();
