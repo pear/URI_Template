@@ -117,6 +117,7 @@ class URI_Template
      *
      * Adds the value of the second parameter to the beginning of the first 
      * element from the first parameter and returns the resulting string.
+     * The value of the second parameter may be an array.
      *
      * @param array List of variables. Only the first element is used.
      * @param string Prefix string
@@ -125,22 +126,37 @@ class URI_Template
     private function operationPrefix($variables, $arg)
     {
         $tmp = current($variables);
+        if (is_array($tmp)) {
+            if (count($tmp) > 0) {
+                $tmp = join($arg, $tmp);
+            } else {
+                $tmp = '';
+            }
+        }
         return (empty($tmp) ? '' : $arg . $tmp);
     }
 
     /**
-     * Implements the 'append' operator
+     * Implements the 'suffix' operator
      *
      * Appends the value of the second parameter to the first element of the
-     * first parameter and returns the resulting string.
+     * first parameter and returns the resulting string.  The value of the
+     * second parameter may be an array.
      *
      * @param array List of variables. Only the first element is used.
      * @param string String to append to the first element of $variables
      * @return string
      */
-    private function operationAppend($variables, $arg)
+    private function operationSuffix($variables, $arg)
     {
         $tmp = current($variables);
+        if (is_array($tmp)) {
+            if (count($tmp) > 0) {
+                $tmp = join($arg, $tmp);
+            } else {
+                $tmp = '';
+            }
+        }
         return (empty($tmp) ? '' : $tmp . $arg);
     }
 
@@ -172,7 +188,7 @@ class URI_Template
     }
 
     /**
-     * Implements the 'listjoin' operator
+     * Implements the 'list' operator
      *
      * Joins the elements of the first element of the first parameter with the
      * value of the second parameter.
@@ -182,7 +198,7 @@ class URI_Template
      * @param string Join needle
      * @return string
      */
-    private function operationListjoin($variables, $arg)
+    private function operationList($variables, $arg)
     {
         $tmp = current($variables);
         return (is_array($tmp) ? join($arg, $tmp) : '');

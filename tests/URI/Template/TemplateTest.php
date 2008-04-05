@@ -77,23 +77,24 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
         self::runnerHelper($tests);
     }
 
-    public function testAppend() {
+    public function testSuffix() {
         $tests = array(
-            array("-append|/|foo",          array(),                    ""),
-            array("-append|#|foo=wilma",    array(),                    "wilma#"),
-            array("-append|&?|foo=wilma",   array("foo" =>  "barney"),  "barney&?"),
+            array("-suffix|/|foo",          array(),                    ""),
+            array("-suffix|#|foo=wilma",    array(),                    "wilma#"),
+            array("-suffix|&?|foo=wilma",   array("foo" =>  "barney"),  "barney&?"),
+            array("-suffix|&|foo",          array("foo" => array("wilma", "barney")), "wilma&barney&")
         );
 
         self::runnerHelper($tests);
     }
 
-    public function testListjoin() {
+    public function testList() {
         $tests = array(
-            array("-listjoin|/|foo",        array(),                            ""),
-            array("-listjoin|/|foo",        array("foo" =>  array("a", "b")),   "a/b"),
-            array("-listjoin||foo",         array("foo" =>  array("a", "b")),   "ab"),
-            array("-listjoin|/|foo",        array("foo" =>  array("a")),        "a"),
-            array("-listjoin|/|foo",        array("foo" =>  array()),           ""),
+            array("-list|/|foo",        array(),                            ""),
+            array("-list|/|foo",        array("foo" =>  array("a", "b")),   "a/b"),
+            array("-list||foo",         array("foo" =>  array("a", "b")),   "ab"),
+            array("-list|/|foo",        array("foo" =>  array("a")),        "a"),
+            array("-list|/|foo",        array("foo" =>  array()),           ""),
         );
 
         self::runnerHelper($tests);
@@ -119,6 +120,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             array("-prefix|&|foo=wilma", array(),                 "&wilma"),
             array("-prefix||foo=wilma", array(),                 "wilma"),
             array("-prefix|&|foo=wilma", array("foo" =>  "barney"),  "&barney"),
+            array("-prefix|&|foo", array("foo" => array("wilma", "barney")), "&wilma&barney")
         );
 
         self::runnerHelper($tests);
@@ -154,7 +156,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
     public function testSpecials() {
         $tests = array(
             array("foo",                array("foo" =>  " "),                       "%20"),
-            array("-listjoin|&|foo",    array("foo" =>  array("&", "&", "|", "_")), "%26&%26&%7C&_"),
+            array("-list|&|foo",    array("foo" =>  array("&", "&", "|", "_")), "%26&%26&%7C&_"),
         );
 
         self::runnerHelper($tests);
@@ -164,44 +166,58 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
         $t = new URI_Template("http://example.org/news/{id}/");
         self::assertEquals("http://example.org/news/joe/", $t->substitute(array("id" => "joe")));
 
-        $t = new URI_Template("http://www.google.com/notebook/feeds/{userID}{-prefix|/notebooks/|notebookID}{-opt|/-/|categories}{-listjoin|/|categories}?{-join|&|updated-min,updated-max,alt,start-index,max-results,entryID,orderby}");
+        $t = new URI_Template("http://www.google.com/notebook/feeds/{userID}{-prefix|/notebooks/|notebookID}{-opt|/-/|categories}{-list|/|categories}?{-join|&|updated-min,updated-max,alt,start-index,max-results,entryID,orderby}");
         self::assertEquals("http://www.google.com/notebook/feeds/joe?", $t->substitute(array("userID" => "joe")));
 
         self::assertEquals("http://www.google.com/notebook/feeds/joe/-/A%7C-B/-C?start-index=10",
-            $t->substitute(array("userID" => "joe", "categories" => array("A|-B", "-C"), "start-index" => "10")));
+        $t->substitute(array("userID" => "joe", "categories" => array("A|-B", "-C"), "start-index" => "10")));
 
-        /* Source: From the IETF Draft */
+        /* Source: IETF Draft 03 */
+        $values = array("bar" => "fred", "baz" => "10,20,30", "qux" => array(10, 20, 30),
+                        "corge" => array(), "grault" => " ", "garply" => "a/b/c",
+                        "waldo" => "ben & jerrys", "fred" => array("fred", "", "wilma"),
+                        "1-a_b.c" => 200);
+
+        $tests = array(
+            "http://example.org/?q={bar}" => "http://example.org/?q=fred",
+            "/{xyzzy}" => "/",
+            "http://example.org/?{-join|&|bar,xyzzy,baz}" => "http://example.org/?bar=fred&baz=10%2C20%2C30",
+            "http://example.org/?d={-list|,|qux}" => "http://example.org/?d=10,20,30",
+            "http://example.org/?d={-list|&d=|qux}" => "http://example.org/?d=10&d=20&d=30",
+            "http://example.org/{bar}{bar}/{garply}" => "http://example.org/fredfred/a%2Fb%2Fc",
+            "http://example.org/{bar}{-prefix|/|fred}" => "http://example.org/fred/fred//wilma",
+            "../{waldo}/" => "../ben%20%26%20jerrys/",
+            "telnet:192.0.2.16{-opt|:80|grault}" => "telnet:192.0.2.16:80",
+            ":{1-a_b.c}:" => ":200:",
+            );
+            
+        foreach ($tests as $key => $value) {
+            $t = new URI_Template($key);
+            self::assertEquals($value, $t->substitute($values));
+        }
+
+        /* Source: IETF Draft 02 */
         $values = array("a" => "foo", "b" => "bar", "data" => "10,20,30",
                         "points" => array(10, 20, 30), "list0" => array(),
                         "str0" => "", "reserved" => ":/?#[]@!$&'()*+,;=",
                         "a_b" => "baz");
 
-        $t = new URI_Template("/{-append|/|a}{-opt|data|points}{-neg|@|a}{-prefix|#|b}");
-        self::assertEquals("/foo/data#bar", $t->substitute($values));
+        $tests = array(
+            "/{-suffix|/|a}{-opt|data|points}{-neg|@|a}{-prefix|#|b}" => "/foo/data#bar",
+            "relative/{reserved}/" => "relative/%3A%2F%3F%23%5B%5D%40%21%24%26%27%28%29%2A%2B%2C%3B%3D/",
+            "http://example.org/{foo=%25}/" => "http://example.org/%25/",
+            "http://example.org/?{-join|&|a,data}" => "http://example.org/?a=foo&data=10%2C20%2C30",
+            "http://example.org/?d={-list|,|points}&{-join|&|a,b}" => "http://example.org/?d=10,20,30&a=foo&b=bar",
+            "http://example.org/?d={-list|,|list0}&{-join|&|foo}" => "http://example.org/?d=&",
+            "http://example.org/?d={-list|&d=|points}" => "http://example.org/?d=10&d=20&d=30",
+            "http://example.org/{a}{b}/{a_b}" => "http://example.org/foobar/baz",
+            "http://example.org/{a}{-prefix|/-/|a}/" => "http://example.org/foo/-/foo/",
+            );
 
-        $t = new URI_Template("relative/{reserved}/");
-        self::assertEquals("relative/%3A%2F%3F%23%5B%5D%40%21%24%26%27%28%29%2A%2B%2C%3B%3D/", $t->substitute($values));
-
-        $t = new URI_Template("http://example.org/{foo=%25}/");
-        self::assertEquals("http://example.org/%25/", $t->substitute($values));
-
-        $t = new URI_Template("http://example.org/?{-join|&|a,data}");
-        self::assertEquals("http://example.org/?a=foo&data=10%2C20%2C30", $t->substitute($values));
-
-        $t = new URI_Template("http://example.org/?d={-listjoin|,|points}&{-join|&|a,b}");
-        self::assertEquals("http://example.org/?d=10,20,30&a=foo&b=bar", $t->substitute($values));
-
-        $t = new URI_Template("http://example.org/?d={-listjoin|,|list0}&{-join|&|foo}");
-        self::assertEquals("http://example.org/?d=&", $t->substitute(array()));
-
-        $t = new URI_Template("http://example.org/?d={-listjoin|&d=|points}");
-        self::assertEquals("http://example.org/?d=10&d=20&d=30", $t->substitute($values));
-
-        $t = new URI_Template("http://example.org/{a}{b}/{a_b}");
-        self::assertEquals("http://example.org/foobar/baz", $t->substitute($values));
-
-        $t = new URI_Template("http://example.org/{a}{-prefix|/-/|a}/");
-        self::assertEquals("http://example.org/foo/-/foo/", $t->substitute($values));
+        foreach ($tests as $key => $value) {
+            $t = new URI_Template($key);
+            self::assertEquals($value, $t->substitute($values));
+        }
     }
 
     private static function runnerHelper($tests) {

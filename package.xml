@@ -13,18 +13,18 @@
   <email>mj@php.net</email>
   <active>yes</active>
  </lead>
- <date>2008-03-09</date>
- <time>13:33:09</time>
+ <date>2008-04-05</date>
+ <time>16:59:09</time>
  <version>
-  <release>0.1.0</release>
-  <api>0.1.0</api>
+  <release>0.2.0</release>
+  <api>0.2.0</api>
  </version>
  <stability>
   <release>alpha</release>
   <api>alpha</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
- <notes>Initial release</notes>
+ <notes>Added support for the 03 draft of the URI Template specification.</notes>
  <contents>
   <dir baseinstalldir="URI" name="/">
    <dir name="tests">
@@ -75,6 +75,19 @@
    <date>2008-03-09</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
    <notes>Initial release</notes>
+  </release>
+  <release>
+   <version>
+    <release>0.2.0</release>
+    <api>0.2.0</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2008-04-05</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
+   <notes>Added support for the 03 draft of the URI Template specification.</notes>
   </release>
  </changelog>
 </package>
