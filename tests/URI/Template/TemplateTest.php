@@ -77,6 +77,31 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
         self::runnerHelper($tests);
     }
 
+    public function testGetTemplateVariables() {
+        $tests = array(
+            "/{-suffix|/|a}{-opt|data|points}{-neg|@|a}{-prefix|#|b}" => array("a", "points", "b"),
+            "relative/{reserved}/"                                    => array("reserved"),
+            "http://example.org/{foo=%25}/"                           => array("foo"),
+            "http://example.org/?{-join|&|a,data}"                    => array("a", "data"),
+            "http://example.org/?d={-list|,|points}&{-join|&|a,b}"    => array("points", "a", "b"),
+            "http://example.org/?d={-list|,|list0}&{-join|&|foo}"     => array("list0", "foo"),
+            "http://example.org/?d={-list|&d=|points}"                => array("points"),
+            "http://example.org/{a}{b}/{a_b}"                         => array("a", "b", "a_b"),
+            "http://example.org/{a}{-prefix|/-/|a}/"                  => array("a"),
+            );
+
+        $i = 0;
+        foreach ($tests as $uri => $expected) {
+            $t = new URI_Template($uri);
+            $result = $t->getTemplateVariables();
+
+            self::assertEquals($expected, $result, sprintf(
+                __FUNCTION__ . ": test case #%d [%s != %s]", 
+                ++$i, $expected, $result
+            ));
+        }
+    }
+
     public function testSuffix() {
         $tests = array(
             array("-suffix|/|foo",          array(),                    ""),

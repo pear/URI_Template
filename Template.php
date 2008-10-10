@@ -82,6 +82,27 @@ class URI_Template
     }
 
     /**
+     * Return an array containing the template variables names.
+     *
+     * @return array Array of template variables names
+     */
+    public function getTemplateVariables()
+    {
+        $variables = array();
+
+        if (preg_match_all('~(\{[^\}]+\})~', $this->template, $matches)) {
+            foreach ($matches[0] as $match) {
+                $expansion = substr($match, 1, -1);
+                list( , , $vars) = $this->parseExpansion($expansion);
+                $variables = array_merge($variables, array_keys($vars));
+            }
+            $variables = array_values(array_unique($variables));
+        }
+
+        return $variables;
+    }
+
+    /**
      * Callback method for handling a single replacement.
      *
      * @see substitute()
