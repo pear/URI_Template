@@ -50,12 +50,18 @@ $p2->setReleaseVersion("0.3.0");
 $p2->setReleaseStability("alpha");
 $p2->setAPIVersion("0.3.0");
 $p2->setAPIStability("alpha");
-$p2->setNotes("Implemented Feature Request #14763: Added new method getTemplateVariables() which returns an array containing the template variables names. (Provided by David Jean Louis.)");
+$p2->setNotes("
+* Implemented Feature Request #14763: Added new method getTemplateVariables() which returns an array containing the template variables names. (Provided by David Jean Louis.)
+* Changed visiblity of internal methods from private to protected. (Based on a patch by David Jean Louis.)
+");
 $p2->setLicense("BSD License", "http://www.opensource.org/licenses/bsd-license.php");
 
 $p2->setPhpDep("5.2.0");
 $p2->setPearinstallerDep("1.6.2");
 
 $p2->addMaintainer("lead", "mj", "Martin Jansen", "mj@php.net");
+
+$p2->addReplacement("Templates.php", "package-info",
+    "@package_version@", "version");
 
 $p2->writePackageFile();

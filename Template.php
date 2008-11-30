@@ -1,4 +1,7 @@
 <?php
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
 /**
  * Copyright (c) 2007-2008 Martin Jansen
  *
@@ -33,20 +36,33 @@
  * This class implements parsing of URI Templates as defined in the IETF's
  * URI Template draft.
  *
- * @author Martin Jansen <mj@php.net>
- * @license http://www.opensource.org/licenses/bsd-license.php BSD
+ * @author    Martin Jansen <mj@php.net>
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD
+ * @copyright 2007-2008 Martin Jansen
+ * @version   Release: @package_version@
+ * @link      http://pear.php.net/package/URI_Template
+ * @since     Class available since release 0.1.0
  */
 class URI_Template
 {
+    /**
+     * The URI template string.
+     *
+     * @var string $template URI template string
+     */
+    protected $template = '';
 
-    private $template = '';
-
-    private $values = array();
+    /**
+     * The array containing the replacement variables.
+     *
+     * @var array $values Array of replacement variables
+     */
+    protected $values = array();
 
     /**
      * Constructor method
      *
-     * @param string URI Template
+     * @param string $template URI Template string
      */
     public function __construct($template)
     {
@@ -54,10 +70,10 @@ class URI_Template
     }
 
     /**
-     * Substitutes template expansions in the URI template
+     * Substitutes template expansions in the URI template.
      *
-     * @param array Associative array with replacements for the variables in 
-     *              the expansions
+     * @param array $values Associative array with replacements for the 
+     *                      variables in the expansions
      * @return string URI
      */
     public function substitute($values)
@@ -106,10 +122,10 @@ class URI_Template
      * Callback method for handling a single replacement.
      *
      * @see substitute()
-     * @param array Array of matched elements
+     * @param array $matches Array of matched elements
      * @return string
      */
-    private function _substitute($matches)
+    protected function _substitute($matches)
     {
         $output = '';
         $expansion = substr($matches[0], 1, -1);
@@ -134,17 +150,18 @@ class URI_Template
     }
 
     /**
-     * Implements the 'prefix' operator
+     * Implements the 'prefix' operator.
      *
      * Adds the value of the second parameter to the beginning of the first 
      * element from the first parameter and returns the resulting string.
      * The value of the second parameter may be an array.
      *
-     * @param array List of variables. Only the first element is used.
-     * @param string Prefix string
+     * @param array $variables List of variables. Only the first element is 
+     *                         used.
+     * @param string $arg Prefix string
      * @return string
      */
-    private function operationPrefix($variables, $arg)
+    protected function operationPrefix($variables, $arg)
     {
         $tmp = current($variables);
         if (is_array($tmp)) {
@@ -158,17 +175,18 @@ class URI_Template
     }
 
     /**
-     * Implements the 'suffix' operator
+     * Implements the 'suffix' operator.
      *
      * Appends the value of the second parameter to the first element of the
      * first parameter and returns the resulting string.  The value of the
      * second parameter may be an array.
      *
-     * @param array List of variables. Only the first element is used.
-     * @param string String to append to the first element of $variables
+     * @param array $variables List of variables. Only the first element is 
+     *                         used.
+     * @param string $arg String to append to the first element of $variables.
      * @return string
      */
-    private function operationSuffix($variables, $arg)
+    protected function operationSuffix($variables, $arg)
     {
         $tmp = current($variables);
         if (is_array($tmp)) {
@@ -182,18 +200,18 @@ class URI_Template
     }
 
     /**
-     * Implements the 'join' operator
+     * Implements the 'join' operator.
      *
      * For each variable from the first parameter that is defined and 
      * non-empty create a keyvalue string that is the concatenation of the 
      * variable name, '=', and the variable value.  All elements are in turn
      * concatenated with the value of the second parameter.
      *
-     * @param array List of variables
-     * @param string Join needle
+     * @param array $variables List of variables
+     * @param string $arg Join needle
      * @return string
      */
-    private function operationJoin($variables, $arg)
+    protected function operationJoin($variables, $arg)
     {
         $tmp = array();
         ksort($variables);
@@ -209,34 +227,34 @@ class URI_Template
     }
 
     /**
-     * Implements the 'list' operator
+     * Implements the 'list' operator.
      *
      * Joins the elements of the first element of the first parameter with the
      * value of the second parameter.
      *
-     * @param array List of variables. Only the first element is used and this 
-     *              must be an array.
-     * @param string Join needle
+     * @param array $variables List of variables. Only the first element is 
+     *                         used and this must be an array.
+     * @param string $arg Join needle
      * @return string
      */
-    private function operationList($variables, $arg)
+    protected function operationList($variables, $arg)
     {
         $tmp = current($variables);
         return (is_array($tmp) ? join($arg, $tmp) : '');
     }
 
     /**
-     * Implements the 'opt' operator
+     * Implements the 'opt' operator.
      *
      * If one or more variables from the first parameter are non-empty then
      * this method returns the value of the second parameter.  Otherwise an
      * empty string is returned.
      *
-     * @param array List of variables
-     * @param string Return value
+     * @param array $variables List of variables
+     * @param string $arg Return value
      * @return string
      */
-    private function operationOpt($variables, $arg)
+    protected function operationOpt($variables, $arg)
     {
         foreach ($variables as $value) {
             $defined = (is_array($value) ? (count($value) > 0) : !empty($value));
@@ -249,14 +267,14 @@ class URI_Template
     }
 
     /**
-     * Implements the 'neg' operator
+     * Implements the 'neg' operator.
      *
      * If all the variables from the first parameter are empty then this method
      * returns the value of the second parameter.  Otherwise an empty string 
      * is returned.
      *
-     * @param array List of variables
-     * @param string Return value
+     * @param array $variables List of variables
+     * @param string $arg Return value
      * @return string
      */
     private function operationNeg($variables, $arg)
@@ -274,12 +292,12 @@ class URI_Template
      *
      * @see Appendix A of the URI Templates Draft 
      *      (http://bitworking.org/projects/URI-Templates/draft-gregorio-uritemplate-02.html#appendix_a)
-     * @param string Expansion
+     * @param string $expansion Expansion
      * @return array Array with three elements containing the name of the 
      *               operation, the operation argument and the variables from 
      *               the expansion
      */
-    private function parseExpansion($expansion)
+    protected function parseExpansion($expansion)
     {
         if (strstr($expansion, '|')) {
             list($op, $arg, $vars) = explode('|', $expansion);
