@@ -74,9 +74,13 @@ class URI_Template
      *
      * @param array $values Associative array with replacements for the 
      *                      variables in the expansions
+     * @param boolean $URLencode Boolean variable determing if the replacements
+     *                           should be encoded according to RFC 1738 or
+     *                           or not. Default is true, i.e. the replacements
+     *                           are encoded.
      * @return string URI
      */
-    public function substitute($values)
+    public function substitute($values, $URLencode = true)
     {
         /* We need to assign $values to an object member because it is needed
          * in self::_substitute().
@@ -86,11 +90,13 @@ class URI_Template
         /* Because it is common that a template contains several replacements,
          * we do the URL encoding here instead of in _substitute.
          */
-        foreach ($this->values as &$value) {
-            if (is_array($value)) {
-                $value = array_map('rawurlencode', $value);
-            } else {
-                $value = rawurlencode($value);
+        if ($URLencode) {
+            foreach ($this->values as &$value) {
+                if (is_array($value)) {
+                    $value = array_map('rawurlencode', $value);
+                } else {
+                    $value = rawurlencode($value);
+                }
             }
         }
 

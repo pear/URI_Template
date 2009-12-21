@@ -76,6 +76,18 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
 
         self::runnerHelper($tests);
     }
+    
+    public function testSubstituteSansURLEncoding() {
+        $t = new URI_Template("{foo}");
+        $result = $t->substitute(array("foo" => "%s"), false);
+        self::assertEquals("%s", $result);
+
+        $result = $t->substitute(array("foo" => "%s"), true);
+        self::assertEquals("%25s", $result);
+
+        $result = $t->substitute(array("foo" => "%s"));
+        self::assertEquals("%25s", $result);
+    }
 
     public function testGetTemplateVariables() {
         $tests = array(
