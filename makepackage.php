@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2007-2008 Martin Jansen
+ * Copyright (c) 2007-2009 Martin Jansen
  * 
  * All rights reserved.
  *
@@ -46,13 +46,13 @@ $p2->setPackage("URI_Template");
 $p2->setChannel("pear.php.net");
 $p2->setSummary("Parser for URI Templates.");
 $p2->setDescription("URI_Template is a parser for URI Templates as defined in the URI Template specification (http://bitworking.org/projects/URI-Templates).");
-$p2->setReleaseVersion("0.3.0");
+$p2->setReleaseVersion("0.3.1");
 $p2->setReleaseStability("alpha");
-$p2->setAPIVersion("0.3.0");
+$p2->setAPIVersion("0.3.1");
 $p2->setAPIStability("alpha");
 $p2->setNotes("
-* Implemented Feature Request #14763: Added new method getTemplateVariables() which returns an array containing the template variables names. (Provided by David Jean Louis.)
-* Changed visiblity of internal methods from private to protected. (Based on a patch by David Jean Louis.)
+* Implemented Feature Request #15384: Make rawurlencode optional.
+* Added full compatibility for PHP 5.3.0+.
 ");
 $p2->setLicense("BSD License", "http://www.opensource.org/licenses/bsd-license.php");
 
