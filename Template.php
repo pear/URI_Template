@@ -307,12 +307,12 @@ class URI_Template
             $vars = $expansion;
         }
 
-        $vars = split(',', $vars);
+        $vars = explode(',', $vars);
 
         $variables = array();
         foreach ($vars as $var) {
             if (strstr($var, '=')) {
-                list($varname, $vardefault) = split('=', $var);
+                list($varname, $vardefault) = explode('=', $var);
             } else {
                 $varname = $var;
                 $vardefault = '';
