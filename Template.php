@@ -283,7 +283,7 @@ class URI_Template
      * @param string $arg Return value
      * @return string
      */
-    private function operationNeg($variables, $arg)
+    protected function operationNeg($variables, $arg)
     {
         $defined = false;
         foreach ($variables as $value) {
