@@ -3,7 +3,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Copyright (c) 2007-2008 Martin Jansen
+ * Copyright (c) 2007-2009 Martin Jansen
  *
  * All rights reserved.
  *
@@ -28,7 +28,14 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ *
+ * @category Networking
+ * @package  URI_Template
+ * @author   Martin Jansen <mj@php.net>
+ * @license  http://www.opensource.org/licenses/bsd-license.php BSD
+ * @version  SVN: $Id$
+ * @link     http://pear.php.net/package/URI_Template
+ */
 
 /**
  * Parser for URI Templates
@@ -36,9 +43,11 @@
  * This class implements parsing of URI Templates as defined in the IETF's
  * URI Template draft.
  *
+ * @category  Networking
+ * @package   URI_Template
  * @author    Martin Jansen <mj@php.net>
- * @license   http://www.opensource.org/licenses/bsd-license.php BSD
  * @copyright 2007-2008 Martin Jansen
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/URI_Template
  * @since     Class available since release 0.1.0
@@ -72,12 +81,13 @@ class URI_Template
     /**
      * Substitutes template expansions in the URI template.
      *
-     * @param array $values Associative array with replacements for the 
-     *                      variables in the expansions
+     * @param array   $values    Associative array with replacements for the 
+     *                           variables in the expansions
      * @param boolean $URLencode Boolean variable determing if the replacements
      *                           should be encoded according to RFC 1738 or
      *                           or not. Default is true, i.e. the replacements
      *                           are encoded.
+     *
      * @return string URI
      */
     public function substitute($values, $URLencode = true)
@@ -100,7 +110,11 @@ class URI_Template
             }
         }
 
-        return preg_replace_callback('~(\{[^\}]+\})~', array($this, '_substitute'), $this->template);
+        return preg_replace_callback(
+            '~(\{[^\}]+\})~', 
+            array($this, '_substitute'),
+            $this->template
+        );
     }
 
     /**
@@ -127,8 +141,9 @@ class URI_Template
     /**
      * Callback method for handling a single replacement.
      *
-     * @see substitute()
-     * @param array $matches Array of matched elements
+     * @param array $matches an Array of matched elements
+     *
+     * @see substitute
      * @return string
      */
     protected function _substitute($matches)
@@ -162,9 +177,10 @@ class URI_Template
      * element from the first parameter and returns the resulting string.
      * The value of the second parameter may be an array.
      *
-     * @param array $variables List of variables. Only the first element is 
-     *                         used.
-     * @param string $arg Prefix string
+     * @param array  $variables List of variables. Only the first element is 
+     *                          used.
+     * @param string $arg       Prefix string
+     *
      * @return string
      */
     protected function operationPrefix($variables, $arg)
@@ -187,9 +203,11 @@ class URI_Template
      * first parameter and returns the resulting string.  The value of the
      * second parameter may be an array.
      *
-     * @param array $variables List of variables. Only the first element is 
-     *                         used.
-     * @param string $arg String to append to the first element of $variables.
+     * @param array  $variables List of variables. Only the first element is 
+     *                          used.
+     * @param string $arg       String to append to the first element of 
+     *                          $variables.
+     *
      * @return string
      */
     protected function operationSuffix($variables, $arg)
@@ -213,8 +231,9 @@ class URI_Template
      * variable name, '=', and the variable value.  All elements are in turn
      * concatenated with the value of the second parameter.
      *
-     * @param array $variables List of variables
-     * @param string $arg Join needle
+     * @param array  $variables List of variables
+     * @param string $arg       Join needle
+     *
      * @return string
      */
     protected function operationJoin($variables, $arg)
@@ -238,9 +257,10 @@ class URI_Template
      * Joins the elements of the first element of the first parameter with the
      * value of the second parameter.
      *
-     * @param array $variables List of variables. Only the first element is 
-     *                         used and this must be an array.
-     * @param string $arg Join needle
+     * @param array  $variables List of variables. Only the first element is 
+     *                          used and this must be an array.
+     * @param string $arg       Join needle
+     *
      * @return string
      */
     protected function operationList($variables, $arg)
@@ -256,8 +276,9 @@ class URI_Template
      * this method returns the value of the second parameter.  Otherwise an
      * empty string is returned.
      *
-     * @param array $variables List of variables
-     * @param string $arg Return value
+     * @param array  $variables List of variables
+     * @param string $arg       Return value
+     *
      * @return string
      */
     protected function operationOpt($variables, $arg)
@@ -279,8 +300,9 @@ class URI_Template
      * returns the value of the second parameter.  Otherwise an empty string 
      * is returned.
      *
-     * @param array $variables List of variables
-     * @param string $arg Return value
+     * @param array  $variables List of variables
+     * @param string $arg       Return value
+     *
      * @return string
      */
     protected function operationNeg($variables, $arg)
@@ -296,9 +318,10 @@ class URI_Template
     /**
      * Parses an expansion into its components
      *
+     * @param string $expansion Expansion
+     *
      * @see Appendix A of the URI Templates Draft 
      *      (http://bitworking.org/projects/URI-Templates/draft-gregorio-uritemplate-02.html#appendix_a)
-     * @param string $expansion Expansion
      * @return array Array with three elements containing the name of the 
      *               operation, the operation argument and the variables from 
      *               the expansion
