@@ -10,10 +10,10 @@
   <email>mj@php.net</email>
   <active>yes</active>
  </lead>
- <date>2010-10-25</date>
- <time>23:13:55</time>
+ <date>2010-12-06</date>
+ <time>09:12:05</time>
  <version>
-  <release>0.3.2</release>
+  <release>0.3.3</release>
   <api>0.3.1</api>
  </version>
  <stability>
@@ -22,17 +22,15 @@
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
  <notes>
-Automatically built QA release
-Bug #16768 Pear code styling problem - mj
+QA release
+Bug #18059 	duplicate files in package
  </notes>
  <contents>
-  <dir baseinstalldir="URI" name="/">
-   <file baseinstalldir="URI" md5sum="7b2659d3cc3a1c524ef9c185b210e4d3" name="tests/AllTests.php" role="test" />
-   <file baseinstalldir="URI" md5sum="d439a3161ccccabc860406ab9cf05e50" name="tests/URI/Template/TemplateTest.php" role="test" />
-   <file baseinstalldir="URI" md5sum="5a161134bb1ebbe4ff5caef0b1394778" name="URI/Template.php" role="php" />
-   <file baseinstalldir="URI" md5sum="17c1c33953698c75d5e6d63b64a9fe15" name="makepackage.php" role="php" />
-   <file baseinstalldir="URI" md5sum="0812622d1a72f9f506fe85e6127cff53" name="runtests.sh" role="data" />
-   <file baseinstalldir="URI" md5sum="22e79f5737a776b8654cf58423dc18e3" name="Template.php" role="php" />
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="7b2659d3cc3a1c524ef9c185b210e4d3" name="tests/AllTests.php" role="test" />
+   <file baseinstalldir="/" md5sum="d439a3161ccccabc860406ab9cf05e50" name="tests/URI/Template/TemplateTest.php" role="test" />
+   <file baseinstalldir="/" md5sum="5a161134bb1ebbe4ff5caef0b1394778" name="URI/Template.php" role="php" />
+   <file baseinstalldir="/" md5sum="0812622d1a72f9f506fe85e6127cff53" name="runtests.sh" role="data" />
   </dir>
  </contents>
  <dependencies>
@@ -137,6 +135,22 @@ Implemented Feature Request #14763: Added new method getTemplateVariables() whic
    <notes>
 Automatically built QA release
 Bug #16768 Pear code styling problem - mj
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3.3</release>
+    <api>0.3.1</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2010-12-06</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
+   <notes>
+QA release
+Bug #18059 	duplicate files in package
    </notes>
   </release>
  </changelog>
