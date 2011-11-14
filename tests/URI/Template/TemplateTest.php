@@ -34,8 +34,6 @@
  * @license http://www.opensource.org/licenses/bsd-license.php BSD
  */
 
-error_reporting(E_ALL);
-
 // Call URI_TemplateTest::main() if executed directly.
 if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "URI_TemplateTest::main");
