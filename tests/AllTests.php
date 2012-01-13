@@ -38,7 +38,7 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "URI_Template_AllTests::main");
 }
 
-require_once "PHPUnit/TextUI/TestRunner.php";
+require_once "PHPUnit/Autoload.php";
 
 require_once "URI/Template/TemplateTest.php";
 
