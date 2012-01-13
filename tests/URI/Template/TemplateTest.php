@@ -34,13 +34,7 @@
  * @license http://www.opensource.org/licenses/bsd-license.php BSD
  */
 
-// Call URI_TemplateTest::main() if executed directly.
-if (!defined("PHPUnit_MAIN_METHOD")) {
-    define("PHPUnit_MAIN_METHOD", "URI_TemplateTest::main");
-}
-
-require_once "PHPUnit/Framework/TestCase.php";
-require_once "PHPUnit/Framework/TestSuite.php";
+require_once "PHPUnit/Autoload.php";
 
 require_once "URI/Template.php";
 
@@ -52,17 +46,6 @@ require_once "URI/Template.php";
  */
 class URI_TemplateTest extends PHPUnit_Framework_TestCase
 {
-
-    /**
-     * Runs the test methods of this class.
-     */
-    public static function main() {
-        include_once "PHPUnit/TextUI/TestRunner.php";
-
-        $suite  = new PHPUnit_Framework_TestSuite("URI_TemplateTest");
-        $result = PHPUnit_TextUI_TestRunner::run($suite);
-    }
-
     public function testSubstitute() {
         $tests = array(
             # (template, values, expected)
@@ -72,19 +55,19 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             array("foo=wilma",  array("foo" =>  "barney"),  "barney"),
         );
 
-        self::runnerHelper($tests);
+        $this->runnerHelper($tests);
     }
     
     public function testSubstituteSansURLEncoding() {
         $t = new URI_Template("{foo}");
         $result = $t->substitute(array("foo" => "%s"), false);
-        self::assertEquals("%s", $result);
+        $this->assertEquals("%s", $result);
 
         $result = $t->substitute(array("foo" => "%s"), true);
-        self::assertEquals("%25s", $result);
+        $this->assertEquals("%25s", $result);
 
         $result = $t->substitute(array("foo" => "%s"));
-        self::assertEquals("%25s", $result);
+        $this->assertEquals("%25s", $result);
     }
 
     public function testGetTemplateVariables() {
@@ -104,11 +87,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
         foreach ($tests as $uri => $expected) {
             $t = new URI_Template($uri);
             $result = $t->getTemplateVariables();
-
-            self::assertEquals($expected, $result, sprintf(
-                __FUNCTION__ . ": test case #%d [%s != %s]", 
-                ++$i, $expected, $result
-            ));
+            $this->assertEquals($expected, $result);
         }
     }
 
@@ -120,7 +99,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             array("-suffix|&|foo",          array("foo" => array("wilma", "barney")), "wilma&barney&")
         );
 
-        self::runnerHelper($tests);
+        $this->runnerHelper($tests);
     }
 
     public function testList() {
@@ -132,7 +111,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             array("-list|/|foo",        array("foo" =>  array()),           ""),
         );
 
-        self::runnerHelper($tests);
+        $this->runnerHelper($tests);
     }
 
     public function testJoin() {
@@ -146,7 +125,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             array("-join|&?|foo=wilma",             array("foo" =>  "barney"),  "foo=barney"),
         );
 
-        self::runnerHelper($tests);
+        $this->runnerHelper($tests);
     }
 
     public function testPrefix() {
@@ -158,7 +137,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             array("-prefix|&|foo", array("foo" => array("wilma", "barney")), "&wilma&barney")
         );
 
-        self::runnerHelper($tests);
+        $this->runnerHelper($tests);
     }
 
     public function testOpt() {
@@ -172,7 +151,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             array("-opt|&|foo,bar",   array(),                      ""),
         );
 
-        self::runnerHelper($tests);
+        $this->runnerHelper($tests);
     }
 
     public function testNeg() {
@@ -185,7 +164,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             array("-neg|&|foo,bar",   array("bar" =>  array()),     "&"),
         );
 
-        self::runnerHelper($tests);
+        $this->runnerHelper($tests);
     }
 
     public function testSpecials() {
@@ -194,17 +173,17 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             array("-list|&|foo",    array("foo" =>  array("&", "&", "|", "_")), "%26&%26&%7C&_"),
         );
 
-        self::runnerHelper($tests);
+        $this->runnerHelper($tests);
     }
 
     public function testURITemplate() {
         $t = new URI_Template("http://example.org/news/{id}/");
-        self::assertEquals("http://example.org/news/joe/", $t->substitute(array("id" => "joe")));
+        $this->assertEquals("http://example.org/news/joe/", $t->substitute(array("id" => "joe")));
 
         $t = new URI_Template("http://www.google.com/notebook/feeds/{userID}{-prefix|/notebooks/|notebookID}{-opt|/-/|categories}{-list|/|categories}?{-join|&|updated-min,updated-max,alt,start-index,max-results,entryID,orderby}");
-        self::assertEquals("http://www.google.com/notebook/feeds/joe?", $t->substitute(array("userID" => "joe")));
+        $this->assertEquals("http://www.google.com/notebook/feeds/joe?", $t->substitute(array("userID" => "joe")));
 
-        self::assertEquals("http://www.google.com/notebook/feeds/joe/-/A%7C-B/-C?start-index=10",
+        $this->assertEquals("http://www.google.com/notebook/feeds/joe/-/A%7C-B/-C?start-index=10",
         $t->substitute(array("userID" => "joe", "categories" => array("A|-B", "-C"), "start-index" => "10")));
 
         /* Source: IETF Draft 03 */
@@ -228,7 +207,7 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
             
         foreach ($tests as $key => $value) {
             $t = new URI_Template($key);
-            self::assertEquals($value, $t->substitute($values));
+            $this->assertEquals($value, $t->substitute($values));
         }
 
         /* Source: IETF Draft 02 */
@@ -251,17 +230,17 @@ class URI_TemplateTest extends PHPUnit_Framework_TestCase
 
         foreach ($tests as $key => $value) {
             $t = new URI_Template($key);
-            self::assertEquals($value, $t->substitute($values));
+            $this->assertEquals($value, $t->substitute($values));
         }
     }
 
-    private static function runnerHelper($tests) {
+    private function runnerHelper($tests) {
         $i = 0;
         foreach ($tests as $test) {
             list($template, $values, $expected) = $test;
             $t = new URI_Template("{" . $template . "}");
             $result = $t->substitute($values);
-            self::assertEquals($expected, $result, sprintf("Test case #%d [%s != %s]", ++$i, $expected, $result));
+            $this->assertEquals($expected, $result);
         }
     }
 }
