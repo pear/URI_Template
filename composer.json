@@ -1,0 +1,31 @@
+{
+    "authors": [
+        {
+            "email": "mj@php.net",
+            "name": "Martin Jansen",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "URI": "./"
+        }
+    },
+    "description": "More info available on: http://pear.php.net/package/URI_Template",
+    "include-path": [
+        "./"
+    ],
+    "license": "BSD License",
+    "name": "pear/uri_template",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=URI_Template",
+        "source": "https://github.com/pear/URI_Template"
+    },
+    "type": "library",
+    "require": {
+        "pear/pear_exception": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
